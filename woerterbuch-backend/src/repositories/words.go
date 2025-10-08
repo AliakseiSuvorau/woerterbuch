@@ -110,3 +110,8 @@ func (wr *WordsRepository) Count() int64 {
 	global.DB.Table("words").Count(&count)
 	return count
 }
+
+func (wr *WordsRepository) DeleteById(id uint64) error {
+	result := global.DB.Delete(&model.Word{}, strconv.FormatUint(id, 10))
+	return result.Error
+}

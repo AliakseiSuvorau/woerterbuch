@@ -186,5 +186,32 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+}
 
+func DeleteWord(w http.ResponseWriter, r *http.Request) {
+	body := r.Body
+	defer bodyCloser(body)
+
+	payload, readErr := io.ReadAll(body)
+	if readErr != nil {
+		log.Printf("Error has occurred while reading request body: %v", readErr)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	wordId := map[string]uint64{
+		"id": 0,
+	}
+	if jsonErr := json.Unmarshal(payload, &wordId); jsonErr != nil {
+		log.Printf("Error has occurred while unmarshalling request body: %v", jsonErr)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	wordRepository := repositories.WordsRepository{}
+	if deleteErr := wordRepository.DeleteById(wordId["id"]); deleteErr != nil {
+		log.Printf("Error has occurred while deleting a word: %v", deleteErr)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 }

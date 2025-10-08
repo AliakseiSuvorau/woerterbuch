@@ -16,6 +16,8 @@ const defaultWordRandomBatchSize = 10
 func Init() {
 	http.HandleFunc("/dictionary/word/add", routes.AddWord)
 	http.HandleFunc("/dictionary/word/edit", routes.EditWord)
+	http.HandleFunc("/dictionary/word/delete", routes.DeleteWord)
+
 	http.HandleFunc("/dictionary/list", routes.GetPage)
 	http.HandleFunc("/dictionary/getRandom", routes.GetRandomWords)
 	http.HandleFunc("/dictionary/upload", routes.Upload)
