@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"io"
 	"log"
@@ -47,7 +48,6 @@ func GetPage(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	println(pageNum)
 
 	pageSize, errConv := strconv.Atoi(r.URL.Query().Get("size"))
 	if errConv != nil {
@@ -55,10 +55,9 @@ func GetPage(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	println(pageSize)
 
 	wordRepository := repositories.WordsRepository{}
-	words, err := wordRepository.GetRange((pageNum-1)*pageSize+1, pageNum*pageSize+1)
+	words, err := wordRepository.GetRange((pageNum-1)*pageSize+1, pageNum*pageSize)
 	if err != nil {
 		log.Printf("Error has occurred while getting range of words: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
@@ -152,6 +151,64 @@ func EditWord(w http.ResponseWriter, r *http.Request) {
 	wordRepository := repositories.WordsRepository{}
 	if insertErr := wordRepository.Update(&newWord); insertErr != nil {
 		log.Printf("Error has occurred while inserting a new word: %v", insertErr)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
+func Upload(w http.ResponseWriter, r *http.Request) {
+	body := r.Body
+	defer bodyCloser(body)
+
+	wordRepository := repositories.WordsRepository{}
+	reader := csv.NewReader(body)
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Printf("Error has occurred while reading a record from csv: %v", err)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		newWord := model.Word{
+			Article:     record[0],
+			Word:        record[1],
+			Translation: record[2],
+		}
+		if insertErr := wordRepository.Insert(&newWord); insertErr != nil {
+			log.Printf("Error has occurred while inserting a new word: %v", insertErr)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+	}
+}
+
+func DeleteWord(w http.ResponseWriter, r *http.Request) {
+	body := r.Body
+	defer bodyCloser(body)
+
+	payload, readErr := io.ReadAll(body)
+	if readErr != nil {
+		log.Printf("Error has occurred while reading request body: %v", readErr)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	wordId := map[string]uint64{
+		"id": 0,
+	}
+	if jsonErr := json.Unmarshal(payload, &wordId); jsonErr != nil {
+		log.Printf("Error has occurred while unmarshalling request body: %v", jsonErr)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	wordRepository := repositories.WordsRepository{}
+	if deleteErr := wordRepository.DeleteById(wordId["id"]); deleteErr != nil {
+		log.Printf("Error has occurred while deleting a word: %v", deleteErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

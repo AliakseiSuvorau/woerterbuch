@@ -26,8 +26,6 @@ services:
       dockerfile: Dockerfile
     env_file:
       - backend.dev.env
-    volumes:
-      - ../woerterbuch-backend/dict:/app/dict
     depends_on:
       postgres:
         condition: service_healthy

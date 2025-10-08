@@ -28,8 +28,6 @@ services:
       - backend.local.env
     ports:
       - "6029:6029"
-    volumes:
-      - ../woerterbuch-backend/dict:/app/dict
     depends_on:
       postgres:
         condition: service_healthy

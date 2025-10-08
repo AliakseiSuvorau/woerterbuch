@@ -31,16 +31,24 @@ const ListWords = () => {
             .catch(() => alert("Error while fetching words"));
     }, [page]);
 
-    const handleDelete = (id) => {
-        fetch(`${backendUrl}/dictionary/word/delete`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id })
-        })
-            .then(() => {
-                setWords(words.filter(word => word.id !== id));
-            })
-            .catch(() => alert("Error deleting a word"));
+    const handleDelete = async (id) => {
+        try {
+            const response = await fetch(`${backendUrl}/dictionary/word/delete`,  {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+            });
+
+            if (!response.ok) {
+                alert("Error deleting a word");
+                return;
+            }
+
+            await handleReloadPage()
+        } catch (error) {
+            console.error(error);
+            alert("Error deleting a word")
+        }
     };
 
     const handleEdit = (id, currentArticle, currentWord, currentTranslation) => {
@@ -76,6 +84,27 @@ const ListWords = () => {
                 }
             })
             .catch(() => alert("Error checking next page"));
+    };
+
+    const handleReloadPage = async () => {
+        try {
+            const res = await fetch(`${backendUrl}/dictionary/list?page=${page}&size=${pageSize}`);
+            const data = await res.json();
+            if (data) {
+                setWords(data);
+            } else {
+                if (page > 1) {
+                    const res = await fetch(`${backendUrl}/dictionary/list?page=${page-1}&size=${pageSize}`);
+                    const data = await res.json();
+                    setWords(data)
+                    setPage(prev => prev-1)
+                } else {
+                    setWords([])
+                }
+            }
+        } catch(error) {
+            alert("Error reloading page")
+        }
     };
 
     return (
