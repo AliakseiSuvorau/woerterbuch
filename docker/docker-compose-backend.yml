@@ -1,8 +1,8 @@
-name: wochterbuch
+name: woerterbuch
 
 services:
   postgres:
-    container_name: wochterbuch-postgres
+    container_name: woerterbuch-postgres
     image: postgres:alpine3.17
     environment:
       - POSTGRES_DB=postgres
@@ -15,31 +15,31 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - wochterbuch-postgres:/var/lib/postgresql/data
+      - woerterbuch-postgres:/var/lib/postgresql/data
     networks:
-      - wochterbuch-internal
+      - woerterbuch-internal
 
   backend:
-    container_name: wochterbuch-backend
+    container_name: woerterbuch-backend
     build:
-      context: ../wochterbuch-backend
+      context: ../woerterbuch-backend
       dockerfile: Dockerfile
     env_file:
       - backend.local.env
     ports:
       - "6029:6029"
     volumes:
-      - ../wochterbuch-backend/dict:/app/dict
+      - ../woerterbuch-backend/dict:/app/dict
     depends_on:
       postgres:
         condition: service_healthy
     networks:
-      - wochterbuch-internal
+      - woerterbuch-internal
 
 
 volumes:
-  wochterbuch-postgres:
+  woerterbuch-postgres:
 
 networks:
-  wochterbuch-internal:
+  woerterbuch-internal:
     driver: bridge

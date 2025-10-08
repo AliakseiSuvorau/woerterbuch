@@ -1,9 +1,9 @@
-# Wöchterbuch
+# Wörterbuch
 
 ---
 ## Description
 
-Möchten Sie die Artikeln für die Wöchter lernen? Dann diese Applikation ist für Sie!
+Möchten Sie die Artikeln für die Wörter lernen? Dann diese Applikation ist für Sie!
 Add words to a dictionary and train articles for them.
 
 ![img.png](readme_imgs/main_page.png)

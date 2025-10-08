@@ -1,0 +1,24 @@
+.main-menu-buttons {
+    /*Size*/
+    width: 70%;
+}
+
+.main-menu-image {
+    width: fit-content;
+    height: 15rem;
+}
+
+.vocabulary-actions {
+    display: grid;
+    justify-content: space-between;
+    align-content: end;
+    grid-template-columns: 49% 49%;
+    margin: 2% 0;
+}
+
+.train-button {}
+
+.main-menu-button {
+    width: 100%;
+    text-align: center;
+}

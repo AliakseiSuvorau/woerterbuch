@@ -1,0 +1,15 @@
+.train-counter {
+    text-align: center;
+}
+
+.word-with-translation-and-choice-buttons {
+    text-align: center;
+}
+
+.word-with-translation {
+    margin: 10%;
+}
+
+.feedback {
+    text-align: center;
+}
