@@ -1,0 +1,18 @@
+.new-word {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1%;
+    margin-right: 1%;
+    margin-top: 1%;
+    margin-left: 2%;
+    align-self: stretch;
+}
+
+.save-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1px;
+    margin: 0;
+    aspect-ratio: 1 / 1;
+}
