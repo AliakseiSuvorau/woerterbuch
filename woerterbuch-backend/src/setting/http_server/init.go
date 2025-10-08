@@ -18,6 +18,7 @@ func Init() {
 	http.HandleFunc("/dictionary/word/edit", routes.EditWord)
 	http.HandleFunc("/dictionary/list", routes.GetPage)
 	http.HandleFunc("/dictionary/getRandom", routes.GetRandomWords)
+	http.HandleFunc("/dictionary/upload", routes.Upload)
 
 	port := "6029" // Default port
 	if len(os.Args) > 1 && os.Args[1] == "-port" {

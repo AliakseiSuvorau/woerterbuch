@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"io"
 	"log"
@@ -155,4 +156,35 @@ func EditWord(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+}
+
+func Upload(w http.ResponseWriter, r *http.Request) {
+	body := r.Body
+	defer bodyCloser(body)
+
+	wordRepository := repositories.WordsRepository{}
+	reader := csv.NewReader(body)
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Printf("Error has occurred while reading a record from csv: %v", err)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		newWord := model.Word{
+			Article:     record[0],
+			Word:        record[1],
+			Translation: record[2],
+		}
+		if insertErr := wordRepository.Insert(&newWord); insertErr != nil {
+			log.Printf("Error has occurred while inserting a new word: %v", insertErr)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+	}
+
 }

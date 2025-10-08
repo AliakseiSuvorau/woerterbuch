@@ -9,6 +9,5 @@ import (
 func main() {
 	logger.Init()
 	database.Init()
-	database.PrepareDictionary()
 	http_server.Init()
 }
