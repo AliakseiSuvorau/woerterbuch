@@ -72,11 +72,11 @@ func (wr *WordsRepository) GetAll() ([]*model.Word, error) {
 	return words, result.Error
 }
 
+// GetRange returns a list of words. If from = 1 and to = 8, it will return words from 0 to
 func (wr *WordsRepository) GetRange(from, to int) ([]*model.Word, error) {
 	var words []*model.Word
-	from--
 	total := int(wr.Count())
-	if from >= to || from >= total {
+	if from > to || from > total {
 		return words, nil
 	}
 
@@ -84,6 +84,7 @@ func (wr *WordsRepository) GetRange(from, to int) ([]*model.Word, error) {
 		to = total
 	}
 
+	from--
 	pageSize := to - from
 	result := global.DB.Offset(from).Limit(pageSize).Find(&words)
 	return words, result.Error

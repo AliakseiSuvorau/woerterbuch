@@ -48,7 +48,6 @@ func GetPage(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	println(pageNum)
 
 	pageSize, errConv := strconv.Atoi(r.URL.Query().Get("size"))
 	if errConv != nil {
@@ -56,10 +55,9 @@ func GetPage(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	println(pageSize)
 
 	wordRepository := repositories.WordsRepository{}
-	words, err := wordRepository.GetRange((pageNum-1)*pageSize+1, pageNum*pageSize+1)
+	words, err := wordRepository.GetRange((pageNum-1)*pageSize+1, pageNum*pageSize)
 	if err != nil {
 		log.Printf("Error has occurred while getting range of words: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
