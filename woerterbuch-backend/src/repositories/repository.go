@@ -5,6 +5,6 @@ type Repository[T any] interface {
 	Insert(*T) error
 	InsertMultiple([]*T) error
 	GetAll() ([]*T, error)
-	existsByWordAndTranslation(*T) bool
+	ExistsByWordAndTranslation(*T) bool
 	DeleteById(uint64) error
 }
