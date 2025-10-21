@@ -21,7 +21,7 @@ const Train = () => {
 
     const fetchWords = async () => {
         try {
-            const response = await fetch(`${backendUrl}/dictionary/getRandom`);
+            const response = await fetch(`${backendUrl}/dictionary/getRandomBatch`);
             const data = await response.json();
             setWords(data);
             setCurrentIndex(0);

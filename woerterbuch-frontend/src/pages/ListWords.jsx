@@ -33,7 +33,7 @@ const ListWords = () => {
 
     const handleDelete = async (id) => {
         try {
-            const response = await fetch(`${backendUrl}/dictionary/word/delete`,  {
+            const response = await fetch(`${backendUrl}/word/delete`,  {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id })
@@ -60,7 +60,7 @@ const ListWords = () => {
     };
 
     const handleSave = (id, newArticle, newWord, newTranslation) => {
-        fetch(`${backendUrl}/dictionary/word/edit`, {
+        fetch(`${backendUrl}/word/edit`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id, article: newArticle, word: newWord, translation: newTranslation })

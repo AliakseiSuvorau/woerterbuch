@@ -20,7 +20,7 @@ const AddWord = () => {
             return;
         }
 
-        const response = await fetch(`${backendUrl}/dictionary/word/add`, {
+        const response = await fetch(`${backendUrl}/word/add`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({article: selectedArticle, word, translation}),

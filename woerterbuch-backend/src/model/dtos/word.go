@@ -1,4 +1,4 @@
-package model
+package dtos
 
 type Word struct {
 	ID          uint64 `json:"id" gorm:"primaryKey,autoIncrement"`

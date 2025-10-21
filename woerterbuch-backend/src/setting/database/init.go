@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm/logger"
 
 	"woerterbuch-backend/src/global"
-	"woerterbuch-backend/src/model"
+	"woerterbuch-backend/src/model/dtos"
 )
 
 func Init() {
@@ -28,7 +28,7 @@ func Init() {
 	}
 
 	global.DB = db
-	if err := global.DB.AutoMigrate(&model.Word{}); err != nil {
+	if err := global.DB.AutoMigrate(&dtos.Word{}); err != nil {
 		panic(fmt.Sprintf("failed to auto migrate database: %v", err.Error()))
 	}
 }
