@@ -7,7 +7,7 @@ import (
 	"math/rand"
 
 	"woerterbuch-backend/src/global"
-	"woerterbuch-backend/src/model"
+	"woerterbuch-backend/src/model/dtos"
 	"woerterbuch-backend/src/repositories"
 )
 
@@ -16,7 +16,7 @@ type WordService struct {
 }
 
 // AddWord checks if the word already exists and if not, adds it.
-func (ws *WordService) AddWord(word *model.Word) error {
+func (ws *WordService) AddWord(word *dtos.Word) error {
 	if ws.WordRepo.ExistsByWordAndTranslation(word) {
 		return nil
 	}
@@ -29,11 +29,11 @@ func (ws *WordService) AddWord(word *model.Word) error {
 // GetWordsPage returns 'pageSize' words for page number 'pageNum'. Counts translates page number and page size into limits.
 // Then checks the limits. If upper bound is greater than the total number of words, then returning words till the end.
 // 'pageNum' is always greater than 0.
-func (ws *WordService) GetWordsPage(pageNum, pageSize int64) ([]*model.Word, error) {
+func (ws *WordService) GetWordsPage(pageNum, pageSize int64) ([]*dtos.Word, error) {
 	from := (pageNum - 1) * pageSize // inclusive
 	to := pageNum * pageSize         // exclusive
 
-	var words []*model.Word
+	var words []*dtos.Word
 
 	// Check limits
 	total := ws.WordRepo.Count()
@@ -53,7 +53,7 @@ func (ws *WordService) GetWordsPage(pageNum, pageSize int64) ([]*model.Word, err
 
 // GetRandomWords gets the batch size and checks if it is less than number of words in the dictionary,
 // then retrieves 'batchSize' words from database and shuffles them.
-func (ws *WordService) GetRandomWords() ([]*model.Word, error) {
+func (ws *WordService) GetRandomWords() ([]*dtos.Word, error) {
 	total := ws.WordRepo.Count()
 	batchSize := min(total, global.WordRandomBatchSize)
 	ids, err := ws.WordRepo.GetIds()
@@ -75,7 +75,7 @@ func (ws *WordService) GetRandomWords() ([]*model.Word, error) {
 }
 
 // EditWord checks if the word exists by id and updates it.
-func (ws *WordService) EditWord(word *model.Word) error {
+func (ws *WordService) EditWord(word *dtos.Word) error {
 	if !ws.WordRepo.ExistsById(word.ID) {
 		return nil
 	}
@@ -98,7 +98,7 @@ func (ws *WordService) AddMultipleWords(reader *csv.Reader) error {
 			return fmt.Errorf("add multiple words: %w", err)
 		}
 
-		newWord := model.Word{
+		newWord := dtos.Word{
 			Article:     record[0],
 			Word:        record[1],
 			Translation: record[2],

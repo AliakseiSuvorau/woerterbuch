@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"woerterbuch-backend/src/model"
+	"woerterbuch-backend/src/model/dtos"
 	"woerterbuch-backend/src/repositories"
 	"woerterbuch-backend/src/services"
 )
@@ -25,7 +25,7 @@ func AddWord(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var newWord model.Word
+	var newWord dtos.Word
 	if jsonErr := json.Unmarshal(payload, &newWord); jsonErr != nil {
 		log.Printf("Error has occurred while unmarshalling request body: %v", jsonErr)
 		w.WriteHeader(http.StatusBadRequest)
@@ -83,9 +83,9 @@ func GetPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
-// GetRandomWords handles request for getting random words. Retrieves a random batch of a fixed size of
+// GetRandomBatch handles request for getting random words. Retrieves a random batch of a fixed size of
 // words from dictionary. Wraps and sends response.
-func GetRandomWords(w http.ResponseWriter, r *http.Request) {
+func GetRandomBatch(w http.ResponseWriter, r *http.Request) {
 	wordRepository := repositories.WordsRepository{}
 	wordService := services.WordService{WordRepo: wordRepository}
 	words, err := wordService.GetRandomWords()
@@ -123,7 +123,7 @@ func EditWord(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var newWord model.Word
+	var newWord dtos.Word
 	if jsonErr := json.Unmarshal(payload, &newWord); jsonErr != nil {
 		log.Printf("Error has occurred while unmarshalling request body: %v", jsonErr)
 		w.WriteHeader(http.StatusBadRequest)
